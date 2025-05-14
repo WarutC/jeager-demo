@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class DataService {
-  
   async getRandomUsernames(count: number): Promise<string[]> {
     const usernames: string[] = [];
     for (let i = 0; i < count; i++) {

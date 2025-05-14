@@ -3,7 +3,7 @@ import axios, { AxiosInstance } from 'axios';
 
 @Injectable()
 export class DataService {
-   private axiosInstance: AxiosInstance;
+  private axiosInstance: AxiosInstance;
 
   constructor() {
     this.axiosInstance = axios.create({
@@ -20,5 +20,4 @@ export class DataService {
       throw error;
     }
   }
-
 }
