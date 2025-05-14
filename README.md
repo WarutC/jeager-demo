@@ -6,6 +6,8 @@ This project is a Proof of Concept (POC) for integrating and testing [Jaeger](ht
 
 Jaeger is used for monitoring and troubleshooting microservices-based distributed systems. This POC demonstrates how to set up and use Jaeger for tracing requests across services.
 
+<img width="1512" alt="Screenshot 2568-05-15 at 04 13 08" src="https://github.com/user-attachments/assets/614d9204-fe4c-4bf5-840d-c46244961f3d" />
+
 ## Features
 
 - Distributed tracing with Jaeger
