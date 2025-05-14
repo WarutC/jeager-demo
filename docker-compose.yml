@@ -16,11 +16,11 @@ services:
     environment:
       - COLLECTOR_ZIPKIN_HTTP_PORT=9411
   
-  nestjs01:
+  service-a:
     build:
       context: ./nestjs-project-1
       dockerfile: Dockerfile
-    container_name: nestjs01
+    container_name: service-a
     ports:
       - "3000:3000"
     volumes:
@@ -28,17 +28,15 @@ services:
       - /app/node_modules
     command: npm run start:dev
     environment:
-      - JAEGER_AGENT_HOST=jaeger
-      - JAEGER_AGENT_PORT=6831
-      - JAEGER_SAMPLER_TYPE=const
-      - JAEGER_SAMPLER_PARAM=1
+      - JAEGER_AGENT_URL=http://jaeger:14250
+      - JAEGER_SERVICE_NAME=service-a
     depends_on:
       - jaeger
-  nestjs02:
+  service-b:
     build:
       context: ./nestjs-project-2
       dockerfile: Dockerfile
-    container_name: nestjs02
+    container_name: service-b
     ports:
       - "3001:3000"
     volumes:
@@ -52,11 +50,11 @@ services:
       - JAEGER_SAMPLER_PARAM=1
     depends_on:
       - jaeger
-  nestjs03:
+  service-c:
     build:
       context: ./nestjs-project-3
       dockerfile: Dockerfile
-    container_name: nestjs03
+    container_name: service-c
     ports:
       - "3002:3000"
     volumes:
