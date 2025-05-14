@@ -13,8 +13,11 @@ services:
       - "14268:14268"   # HTTP port for receiving spans
       - "14250:14250"   # HTTP port for gRPC
       - "9411:9411"     # HTTP port for Zipkin compatibility
+      - "4318:4318"     # HTTP port for OpenTelemetry
     environment:
       - COLLECTOR_ZIPKIN_HTTP_PORT=9411
+      - OTEL_TRACES_SAMPLER=always_off
+      - LOG_LEVEL=debug
   
   service-a:
     build:
@@ -28,8 +31,10 @@ services:
       - /app/node_modules
     command: npm run start:dev
     environment:
-      - JAEGER_AGENT_URL=http://jaeger:14250
+      - JAEGER_AGENT_URL=http://jaeger:4318
       - JAEGER_SERVICE_NAME=service-a
+      - SERVICE_B_URL=http://service-b:3000
+      - SERVICE_C_URL=http://service-c:3000
     depends_on:
       - jaeger
   service-b:
@@ -44,10 +49,10 @@ services:
       - /app/node_modules
     command: npm run start:dev
     environment:
-      - JAEGER_AGENT_HOST=jaeger
-      - JAEGER_AGENT_PORT=6831
-      - JAEGER_SAMPLER_TYPE=const
-      - JAEGER_SAMPLER_PARAM=1
+      - JAEGER_AGENT_URL=http://jaeger:4318
+      - JAEGER_SERVICE_NAME=service-b
+      - SERVICE_A_URL=http://service-a:3000
+      - SERVICE_C_URL=http://service-c:3000
     depends_on:
       - jaeger
   service-c:
@@ -62,10 +67,10 @@ services:
       - /app/node_modules
     command: npm run start:dev
     environment:
-      - JAEGER_AGENT_HOST=jaeger
-      - JAEGER_AGENT_PORT=6831
-      - JAEGER_SAMPLER_TYPE=const
-      - JAEGER_SAMPLER_PARAM=1
+      - JAEGER_AGENT_URL=http://jaeger:4318
+      - JAEGER_SERVICE_NAME=service-c
+      - SERVICE_A_URL=http://service-a:3000
+      - SERVICE_B_URL=http://service-b:3000
     depends_on:
       - jaeger
   client:
@@ -75,6 +80,9 @@ services:
     container_name: client
     ports:
       - "8080:8080"
+    environment:
+      - REACT_APP_JAEGER_AGENT_URL=http://jaeger:14250
+      - REACT_APP_JAEGER_SERVICE_NAME=client
     volumes:
       - ./react-demo-tracing:/app
       - /app/node_modules

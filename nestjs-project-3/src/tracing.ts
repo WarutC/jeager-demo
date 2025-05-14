@@ -16,7 +16,7 @@ const IGNORED_PATHS = ['/', '/api', '/health'];
 // Initialize the SDK and register with the OpenTelemetry API
 const sdk = new NodeSDK({
   traceExporter: new OTLPTraceExporter({
-    url: process.env.JAEGER_AGENT_URL ?? 'http://localhost:4317', // (e.g. Jaeger -> http://localhost:4317)
+    url: process.env.JAEGER_AGENT_URL || 'http://localhost:14250', // (e.g. Jaeger -> http://localhost:4317)
   }),
   instrumentations: [
     new NestInstrumentation(),
@@ -30,7 +30,7 @@ const sdk = new NodeSDK({
     }),
     new ExpressInstrumentation(),
   ],
-  serviceName: process.env.JAEGER_SERVICE_NAME ?? 'service-a', // (e.g. 'my-service')
+  serviceName: process.env.JAEGER_SERVICE_NAME ?? 'service-c', // (e.g. 'my-service')
 });
 
 // Enable the API to record telemetry
